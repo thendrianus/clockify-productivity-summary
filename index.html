@@ -1,9 +1,19 @@
 <html>
   <body>
     <div>
-      <button onclick="window.location.reload();">Refresh</button>
-      <input placeholder="Input" id="datainput"></input>
-      <button onclick="process()">Process</button>
+
+      <div>
+        <input placeholder="Input Workspace Id" id="workspaceIdInput"></input>
+        <input placeholder="X API Key" id="xAPIKeyInput"></input>
+      </div>
+
+      <div>
+        <button onclick="window.location.reload();">Reset</button>
+        <input type="date" id="dateInput">
+        <button onclick="generate()">Generate</button>
+      </div>
+
+      <!-- <button onclick="process()">Process</button> -->
       <br>
       <br>
         <b id="date">Date</b>
@@ -36,6 +46,6 @@
     </div>
   </body>
 </html>
-
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" ></script>
 <script src="js/generate.js" ></script>
