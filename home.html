@@ -11,37 +11,41 @@
         <button onclick="window.location.reload();">Reset</button>
         <input type="date" id="dateInput">
         <button onclick="generate()">Generate</button>
+        <button onclick="selectElementContents()">Copy</button>
       </div>
 
       <br>
       <br>
+
+      <div id="signature_container">
         <b id="date">Date</b>
-      <br>
-      <div>
-        <b>My Productive Hours</b>
+        <br>
+        <div>
+          <b>My Productive Hours</b>
+        </div>
+        <table id="summaryTable">
+          <tr>
+            <th>Total</th>
+            <th id="total"></th>
+            <th>100%</th>
+          </tr>
+        </table>
+        <br>
+        My Unproductive Hours: <b id="unproductiveHours"></b>
+        <br>
+        <br>
+        My Sleeping Hours: <b id="sleepingHours"></b>
+        <br>
+        <br>
+        <table id="detailTable">
+          <tr>
+            <th>Description</th>
+            <th>Project</th>
+            <th>Time</th>
+            <th>Duration</th>
+          </tr>
+        </table>
       </div>
-      <table id="summaryTable">
-        <tr>
-          <th>Total</th>
-          <th id="total"></th>
-          <th>100%</th>
-        </tr>
-      </table>
-      <br>
-      My Unproductive Hours: <b id="unproductiveHours"></b>
-      <br>
-      <br>
-      My Sleeping Hours: <b id="sleepingHours"></b>
-      <br>
-      <br>
-      <table id="detailTable">
-        <tr>
-          <th>Description</th>
-          <th>Project</th>
-          <th>Time</th>
-          <th>Duration</th>
-        </tr>
-      </table>
     </div>
   </body>
 </html>
