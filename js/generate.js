@@ -120,13 +120,14 @@ function process() {
 function getTimeEntries(defaultWorkspaceId, defaultXAPIKey, dateInput) {
   const newDateInput = new Date(dateInput);
 
-  const dateFormatTemp = `${newDateInput.getFullYear()}-${
-    newDateInput.getMonth() + 1
-  }-${newDateInput.getDate()}`;
+  let dateRangeStart = moment(newDateInput).utcOffset(0);
+  dateRangeStart.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+  let dateRangeEnd = moment(newDateInput).utcOffset(0);
+  dateRangeEnd.set({ hour: 23, minute: 59, second: 59, millisecond: 59 });
 
   const params = {
-    dateRangeStart: dateFormatTemp + "T00:00:00.000Z",
-    dateRangeEnd: dateFormatTemp + "T23:59:59.999Z",
+    dateRangeStart: dateRangeStart.toISOString(),
+    dateRangeEnd: dateRangeEnd.toISOString(),
     sortOrder: "DESCENDING",
     description: "",
     rounding: false,
