@@ -37,7 +37,7 @@ function processDetailTable() {
     let celDuration = row.insertCell(3);
     celDescription.innerHTML = day.description;
     celProject.innerHTML = day.projectName;
-    celTime.innerHTML = `${dateFormat(day.timeInterval.start)} - ${dateFormat(
+    celTime.innerHTML = `${dateFormat(day.timeInterval.start)}-${dateFormat(
       day.timeInterval.end
     )}`;
     celDuration.innerHTML = durationToTimeFormat(day.timeInterval.duration);
