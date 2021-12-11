@@ -121,9 +121,9 @@ function getTimeEntries(defaultWorkspaceId, defaultXAPIKey, dateInput) {
   const newDateInput = new Date(dateInput);
 
   let dateRangeStart = moment(newDateInput).utcOffset(0);
-  dateRangeStart.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-  let dateRangeEnd = moment(newDateInput).utcOffset(0);
-  dateRangeEnd.set({ hour: 23, minute: 59, second: 59, millisecond: 59 });
+  dateRangeStart.set({ hour: 3, minute: 0, second: 0, millisecond: 0 });
+  let dateRangeEnd = moment(newDateInput).add("days", 1).utcOffset(0);
+  dateRangeEnd.set({ hour: 2, minute: 59, second: 59, millisecond: 59 });
 
   const params = {
     dateRangeStart: dateRangeStart.toISOString(),
