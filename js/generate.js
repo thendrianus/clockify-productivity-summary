@@ -49,7 +49,7 @@ function processDetailTable() {
     celDurationBilling.innerHTML = billingFormat(day.amount);
   });
 }
-
+ 
 function processSummaryTable() {
   let totalData = mainData.totals[0];
   let unproductiveHours = 0;
