@@ -14,6 +14,10 @@ function dateFormat(dateString) {
   return h + ":" + m;
 }
 
+function billingFormat(billing) {
+  return (billing / 100).toFixed(2)
+}
+
 function durationToTimeFormat(duration) {
   const millisecond = duration * 1000;
   const oneDayMillisecond = 86400000;
@@ -35,12 +39,14 @@ function processDetailTable() {
     let celProject = row.insertCell(1);
     let celTime = row.insertCell(2);
     let celDuration = row.insertCell(3);
+    let celDurationBilling = row.insertCell(4);
     celDescription.innerHTML = day.description;
     celProject.innerHTML = day.projectName;
     celTime.innerHTML = `${dateFormat(day.timeInterval.start)}-${dateFormat(
       day.timeInterval.end
     )}`;
     celDuration.innerHTML = durationToTimeFormat(day.timeInterval.duration);
+    celDurationBilling.innerHTML = billingFormat(day.amount);
   });
 }
 
@@ -48,11 +54,14 @@ function processSummaryTable() {
   let totalData = mainData.totals[0];
   let unproductiveHours = 0;
   let sleepingHours = 0;
+  let sleepingHoursBilling = 0;
+  let totalTimeBilling = 0;
 
   mainData.timeentries = mainData.timeentries.filter((day) => {
     if (day.projectName == "Sleeping") {
       totalData.totalTime -= day.timeInterval.duration;
       sleepingHours += day.timeInterval.duration;
+      sleepingHoursBilling += day.amount;
       return false;
     }
     if (day.projectName == "Unproductive stuff") {
@@ -60,6 +69,7 @@ function processSummaryTable() {
       unproductiveHours += day.timeInterval.duration;
       return false;
     }
+    totalTimeBilling += day.amount
     return true;
   });
 
@@ -71,10 +81,14 @@ function processSummaryTable() {
   document.getElementById("total").innerHTML = durationToTimeFormat(
     totalData.totalTime
   );
+  document.getElementById("totalBilling").innerHTML = billingFormat(
+    totalTimeBilling
+  );
   document.getElementById("sleepingHours").innerHTML =
     durationToTimeFormat(sleepingHours);
   document.getElementById("unproductiveHours").innerHTML =
     durationToTimeFormat(unproductiveHours);
+  document.getElementById("sleepingHoursBilling").innerHTML = billingFormat(sleepingHoursBilling);
 
   let project = {};
   mainData.timeentries.forEach((day, index) => {
@@ -86,6 +100,7 @@ function processSummaryTable() {
     project[day.projectName].percentage = parseInt(
       (project[day.projectName].duration / totalData.totalTime) * 100
     );
+    project[day.projectName].billing = (project[day.projectName].billing || 0) + day.amount
   });
 
   function compare(a, b) {
@@ -106,9 +121,11 @@ function processSummaryTable() {
     let celLabel = row.insertCell(0);
     let celValue = row.insertCell(1);
     let celPercentage = row.insertCell(2);
+    let celBilling = row.insertCell(3);
     celLabel.innerHTML = projectKey;
     celValue.innerHTML = durationToTimeFormat(project[projectKey].duration);
     celPercentage.innerHTML = project[projectKey].percentage + "%";
+    celBilling.innerHTML = billingFormat(project[projectKey].billing)
   });
 }
 
