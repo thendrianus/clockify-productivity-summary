@@ -58,13 +58,13 @@ function processSummaryTable() {
   let totalTimeBilling = 0;
 
   mainData.timeentries = mainData.timeentries.filter((day) => {
-    if (day.projectName == "Sleeping") {
+    if (day.projectName.includes("Sleeping")) {
       totalData.totalTime -= day.timeInterval.duration;
       sleepingHours += day.timeInterval.duration;
       sleepingHoursBilling += day.amount;
       return false;
     }
-    if (day.projectName == "Unproductive stuff") {
+    if (day.projectName.includes("Unproductive stuff")) {
       totalData.totalTime -= day.timeInterval.duration;
       unproductiveHours += day.timeInterval.duration;
       return false;
@@ -137,10 +137,10 @@ function process() {
 function getTimeEntries(defaultWorkspaceId, defaultXAPIKey, dateInput) {
   const newDateInput = new Date(dateInput);
 
-  let dateRangeStart = moment(newDateInput).utcOffset(0);
-  dateRangeStart.set({ hour: 3, minute: 0, second: 0, millisecond: 0 });
-  let dateRangeEnd = moment(newDateInput).add("days", 1).utcOffset(0);
-  dateRangeEnd.set({ hour: 2, minute: 59, second: 59, millisecond: 59 });
+  let dateRangeStart = moment(newDateInput).subtract("days", 1).utcOffset(420);
+  dateRangeStart.set({ hour: 20, minute: 0, second: 0, millisecond: 0 });
+  let dateRangeEnd = moment(newDateInput).add("days", 1).utcOffset(420);
+  dateRangeEnd.set({ hour: 8, minute: 59, second: 59, millisecond: 59 });
 
   const params = {
     dateRangeStart: dateRangeStart.toISOString(),
@@ -179,7 +179,17 @@ function getTimeEntries(defaultWorkspaceId, defaultXAPIKey, dateInput) {
       }
     )
     .then(function (response) {
-      mainData = response.data;
+      let {timeentries, totals} = response.data
+      
+      timeentries = getValuesBetweenSleepEntries(timeentries)
+      totals[0].totalTime = timeentries.reduce((sum, item) => sum + item.timeInterval.duration, 0)
+
+      mainData = {
+        timeentries,
+        totals
+      };
+
+      console.log(response.data)
       process();
     })
     .catch(function (error) {
@@ -241,4 +251,19 @@ function selectElementContents() {
     range.select();
   }
   document.execCommand("Copy");
+}
+
+function isSleepingProject(item) {
+  return item.projectName.includes('Sleeping')
+}
+
+function getValuesBetweenSleepEntries(arr) {
+  const countId2 = arr.reduce((count, item) => {
+    return isSleepingProject(item) ? count + 1 : count;
+  }, 0);
+
+  let firstIndex = countId2 > 1 ? arr.findIndex(item => isSleepingProject(item)) + 1 : 0;
+  let lastIndex = arr.slice(firstIndex).findIndex(item => isSleepingProject(item));
+
+  return arr.slice(firstIndex, firstIndex + lastIndex + 1);
 }
